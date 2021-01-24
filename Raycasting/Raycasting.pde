@@ -1,17 +1,22 @@
-Player p;
-int speed = 5;
-float angleSpeed = 0.1;
-int NUMBER_OF_RAYS = 150;
-int rayLength = 800;
-float visionAngle = (float) Math.PI/3;
 int width = 800;
-int height = 800;
+
+
+Player p;
+int speed = width/160;
+float angleSpeed = 0.1;
+int NUMBER_OF_RAYS = 200;
+int rayLength = width;
+float visionAngle = (float) Math.PI/3;
+int height = width;
 
 color wallColorCollision;
 color skyColor = color(0, 100, 200);
 color groundColor = color(50, 50, 50);
 ArrayList<Wall> walls = new ArrayList<Wall>();
 public StringList rays = new StringList();
+
+boolean displayLeftPart = true;
+boolean displayRightPart = true;
 
 /**
  * 0 -> no wall
@@ -21,7 +26,7 @@ public StringList rays = new StringList();
  * 4 -> blue wall
  */
 
- //10*10 map
+//10*10 map
 /*int[] map = 
  {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 
  1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 
@@ -36,29 +41,37 @@ public StringList rays = new StringList();
 
 //16*16 map
 int[] map = 
-    {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-    1, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 1,
-    1, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 1,
-    1, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 3, 3, 0, 0, 1,
-    1, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 3, 0, 0, 0, 1,
-    1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
-    1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
-    1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
-    1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1,
-    1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1,
-    1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1,
-    1, 4, 4, 4, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1,
-    1, 0, 0, 4, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1,
-    1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1,
-    1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1,
-    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,};
+    {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 
+    1, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 1, 
+    1, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 1, 
+    1, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 3, 3, 0, 0, 1, 
+    1, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 3, 0, 0, 0, 1, 
+    1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 
+    1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 
+    1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 
+    1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 
+    1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1, 
+    1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1, 
+    1, 4, 4, 4, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1, 
+    1, 0, 0, 4, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1, 
+    1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 
+    1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 
+    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, };
 
 int widthMap = int(sqrt(map.length));
 int scale = (int) width/widthMap;
 
+void settings() {
+    if (displayLeftPart && displayRightPart) {
+        size(width*2, width);
+    } else {
+        size(width, width);
+    }
+    
+}
 
 void setup() {
-    size(1600, 800);
+
     background(0);
     noStroke();
 
@@ -70,10 +83,15 @@ void draw() {
     background(0);
     //p.angle = atan2(mouseY - p.y, mouseX - p.x);
     p.see();
-    p.show();
+    if (displayLeftPart) {
+        p.show();
+        showWalls();
+    }
+    if (displayRightPart) {
+        paralaxe();
+    }
     p.move();
-    showWalls();
-    paralaxe();
+
 }
 
 //player movements

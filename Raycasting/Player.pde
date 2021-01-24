@@ -14,9 +14,9 @@ public class Player {
 
     public void show() {
         fill(255);
-        ellipse(this.x, this.y, 50, 50);
+        ellipse(this.x, this.y, width/16, width/16);
         fill(255, 0, 0);
-        ellipse(this.x+15*cos(this.angle), this.y+15*sin(this.angle), 15, 15);
+        ellipse(this.x+width/50*cos(this.angle), this.y+width/50*sin(this.angle), width/50, width/50);
     }
 
     public void move() {
@@ -44,12 +44,16 @@ public class Player {
             //length = lengthCollision(see_angle,walls);
             //wallColorCollision = colorCollision(see_angle, walls);
             temp = lengthAndColorCollision(see_angle, walls);
-            
+
             length = float(split(temp, ";")[0]);
             part = int(split(temp, ";")[2]);
             wallColorCollision = color(int(split(split(temp, ";")[1], ",")[0]), int(split(split(temp, ";")[1], ",")[1]), int(split(split(temp, ";")[1], ",")[2]));
-            line(this.x, this.y, this.x+length*cos(see_angle), this.y+length*sin(see_angle));
             rays.append(str(length) + ";" + red(wallColorCollision) + "," + green(wallColorCollision) + "," + blue(wallColorCollision) + ";" + part);
+
+            if (displayLeftPart) {
+                line(this.x, this.y, this.x+length*cos(see_angle), this.y+length*sin(see_angle));
+            }
+
 
             //set angle of the next ray
             see_angle += (visionAngle)/NUMBER_OF_RAYS;

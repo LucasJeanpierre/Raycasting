@@ -7,32 +7,36 @@
  * 1 -> wall color texture
  */
 /*int[] texture = 
-    {0,1,1,
-    1,0,1,
-    1,1,0};*/
+ {0,1,1,
+ 1,0,1,
+ 1,1,0};*/
 
 /*int[] texture = 
-    {1,1,1,
-    1,1,1,
-    1,1,1};*/
+ {1,1,1,
+ 1,1,1,
+ 1,1,1};*/
 
 int[] texture = 
-    {0,1,0,1,
-    1,0,1,0,
-    0,1,0,1,
-    1,0,1,0};
-    
+    {0, 1, 0, 1, 
+    1, 0, 1, 0, 
+    0, 1, 0, 1, 
+    1, 0, 1, 0};
+
 int textureSize = int(sqrt(texture.length));
 
-int renderHeight = 40000;
+int renderHeight = width*50;
 
 void paralaxe() {
-    translate(width, 0);
+    //if we display the top view of the map
+    if (displayLeftPart) {
+        translate(width, 0);
+    }
+    
     color co;
-    float colorScale = rayLength/255;
+    float colorScale = rayLength*1.2/255;
 
     //set the wide of a ray on the screen
-    int w = (int) (width/rays.size());
+    float w = (width/rays.size());
     //rectMode(CENTER);
     //for each ray
     for (int i = 0; i < rays.size(); i++) {
@@ -46,11 +50,12 @@ void paralaxe() {
         //the further the wall is, the smallest it will be on the screen
         rectMode(CORNER);
         for (int j = 0; j < textureSize; j++) {
-            
+
             int touchPart = int(split(rays.get(i), ";")[2]);
             //touchPart = 1;
             //println(touchPart);
-            stroke(co*texture[j*textureSize + touchPart]);
+            //stroke(co*texture[j*textureSize + touchPart]);
+            noStroke();
             fill(co*texture[j*textureSize + touchPart]);
 
             rect(i*w, (height/2-renderHeight/rectLength/2) + renderHeight/rectLength/textureSize*j, w, renderHeight/rectLength/textureSize);
@@ -69,6 +74,8 @@ void paralaxe() {
         rect(i*w, 0, w, (height/2-renderHeight/rectLength/2));
     }
     rectMode(CORNER);
+    if (displayLeftPart) {
+        translate(-width, 0);
+    }
 
-    translate(-width, 0);
 }
