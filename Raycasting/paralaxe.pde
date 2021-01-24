@@ -1,6 +1,31 @@
 /**
  * raycasting 3d rendering 
  */
+
+/**
+ * 0 -> black texture
+ * 1 -> wall color texture
+ */
+/*int[] texture = 
+    {0,1,1,
+    1,0,1,
+    1,1,0};*/
+
+/*int[] texture = 
+    {1,1,1,
+    1,1,1,
+    1,1,1};*/
+
+int[] texture = 
+    {0,1,0,1,
+    1,0,1,0,
+    0,1,0,1,
+    1,0,1,0};
+    
+int textureSize = int(sqrt(texture.length));
+
+int renderHeight = 40000;
+
 void paralaxe() {
     translate(width, 0);
     color co;
@@ -16,18 +41,32 @@ void paralaxe() {
         color wallColor = color(int(float(split(split(rays.get(i), ";")[1], ",")[0])), int(float(split(split(rays.get(i), ";")[1], ",")[1])), int(float(split(split(rays.get(i), ";")[1], ",")[2])));
         //the further the wall is, the less visible it will be
         co = color(red(wallColor)-rectLength/colorScale, green(wallColor)-rectLength/colorScale, blue(wallColor)-rectLength/colorScale);
-        
+
 
         //the further the wall is, the smallest it will be on the screen
-        rectMode(CENTER);
-        fill(co);
-        rect(i*w, height/2, w, 80000/rectLength);
+        rectMode(CORNER);
+        for (int j = 0; j < textureSize; j++) {
+            
+            int touchPart = int(split(rays.get(i), ";")[2]);
+            //touchPart = 1;
+            //println(touchPart);
+            stroke(co*texture[j*textureSize + touchPart]);
+            fill(co*texture[j*textureSize + touchPart]);
+
+            rect(i*w, (height/2-renderHeight/rectLength/2) + renderHeight/rectLength/textureSize*j, w, renderHeight/rectLength/textureSize);
+        }
+
+        //stroke(co);
+        //fill(co);
+        //rect(i*w, height/2, w, 80000/rectLength);
 
         rectMode(CORNER);
         fill(groundColor);
-        rect(i*w, height, w, -(height/2-80000/rectLength/2));
+        stroke(groundColor);
+        rect(i*w, height, w, -(height/2-renderHeight/rectLength/2));
         fill(skyColor);
-        rect(i*w, 0, w, (height/2-80000/rectLength/2));
+        stroke(skyColor);
+        rect(i*w, 0, w, (height/2-renderHeight/rectLength/2));
     }
     rectMode(CORNER);
 

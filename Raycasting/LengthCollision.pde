@@ -7,6 +7,7 @@
 public String lengthAndColorCollision(float angle, ArrayList<Wall> w) {
     float length = rayLength*2;
     color colorCollision = color(0, 0, 0);
+    int wallTouchPart = 0;
 
     //for each wall
     for (int i = 0; i < w.size(); i++) {
@@ -28,6 +29,24 @@ public String lengthAndColorCollision(float angle, ArrayList<Wall> w) {
             if (distance < length) {
                 length = distance;
                 colorCollision = w.get(i).c;
+
+                //we need to return which part of the wall is touch according to the horizontal 3d axis
+                //wallTouchPart is the part of the wall who was touch
+                //we calculate it with the distance between the ray intersection with the wall and the begining of the wall
+                //then a ratio bewteen this distance and the size of the wall dividide by the number of part of the wall
+
+                //if the wall is horizontal (in 2d axis)
+                if (w.get(i).y1 == w.get(i).y2) {
+                    wallTouchPart = int(abs(intersectionX-w.get(i).x2)/(scale/textureSize));
+                    if (wallTouchPart==textureSize) {
+                        wallTouchPart=textureSize-1;
+                    }
+                } else if (w.get(i).x1 == w.get(i).x2) { //if is vertical
+                    wallTouchPart = int(abs(intersectionY-w.get(i).y2)/(scale/textureSize));
+                    if (wallTouchPart==textureSize) {
+                        wallTouchPart=textureSize-1;
+                    }
+                }
             }
         } else { //if the ray don't intersect a wall
 
@@ -38,7 +57,7 @@ public String lengthAndColorCollision(float angle, ArrayList<Wall> w) {
             }
         }
     }
-    return str(length) + ";" + red(colorCollision) + "," + green(colorCollision) + "," + blue(colorCollision);
+    return str(length) + ";" + red(colorCollision) + "," + green(colorCollision) + "," + blue(colorCollision) + ";" + wallTouchPart;
 }
 
 /**

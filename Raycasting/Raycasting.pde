@@ -1,15 +1,15 @@
 Player p;
 int speed = 5;
 float angleSpeed = 0.1;
-int NUMBER_OF_RAYS = 200;
+int NUMBER_OF_RAYS = 150;
 int rayLength = 800;
 float visionAngle = (float) Math.PI/3;
 int width = 800;
 int height = 800;
-int widthMap = 10;
+
 color wallColorCollision;
-color skyColor = color(0,100,200);
-color groundColor = color(50,50,50);
+color skyColor = color(0, 100, 200);
+color groundColor = color(50, 50, 50);
 ArrayList<Wall> walls = new ArrayList<Wall>();
 public StringList rays = new StringList();
 
@@ -20,17 +20,41 @@ public StringList rays = new StringList();
  * 3 -> green wall
  * 4 -> blue wall
  */
+
+ //10*10 map
+/*int[] map = 
+ {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 
+ 1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 
+ 1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 
+ 1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 
+ 1, 0, 1, 0, 0, 4, 0, 0, 0, 1, 
+ 1, 0, 0, 0, 0, 3, 0, 0, 0, 1, 
+ 1, 0, 0, 0, 0, 2, 0, 0, 0, 1, 
+ 1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 
+ 1, 4, 0, 0, 0, 1, 0, 0, 0, 4, 
+ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};*/
+
+//16*16 map
 int[] map = 
-    {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 
-    1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 
-    1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 
-    1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 
-    1, 0, 1, 0, 0, 4, 0, 0, 0, 1, 
-    1, 0, 0, 0, 0, 3, 0, 0, 0, 1, 
-    1, 0, 0, 0, 0, 2, 0, 0, 0, 1, 
-    1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 
-    1, 4, 0, 0, 0, 1, 0, 0, 0, 4, 
-    1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
+    {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+    1, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 1,
+    1, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 1,
+    1, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 3, 3, 0, 0, 1,
+    1, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 3, 0, 0, 0, 1,
+    1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+    1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+    1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+    1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1,
+    1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1,
+    1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1,
+    1, 4, 4, 4, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1,
+    1, 0, 0, 4, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1,
+    1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1,
+    1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1,
+    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,};
+
+int widthMap = int(sqrt(map.length));
+int scale = (int) width/widthMap;
 
 
 void setup() {
@@ -38,7 +62,7 @@ void setup() {
     background(0);
     noStroke();
 
-    p = new Player(width/2, height/4, 0);
+    p = new Player(width/8, height/8, 0);
     createMap(map);
 }
 
@@ -116,7 +140,6 @@ public void createMap(int[] map) {
 }
 
 public void createWall(int x, int y, color c) {
-    int scale = (int) width/widthMap;
     walls.add(new Wall(x*scale, y*scale, x*scale+scale, y*scale, c));
     walls.add(new Wall(x*scale+scale, y*scale, x*scale+scale, y*scale+scale, c));
     walls.add(new Wall(x*scale+scale, y*scale+scale, x*scale, y*scale+scale, c));
