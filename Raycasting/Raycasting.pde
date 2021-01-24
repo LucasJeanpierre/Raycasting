@@ -1,13 +1,15 @@
 Player p;
 int speed = 5;
 float angleSpeed = 0.1;
-int NUMBER_OF_RAYS = 100;
-int rayLength = 700;
-float visionAngle = (float) Math.PI/2;
+int NUMBER_OF_RAYS = 200;
+int rayLength = 800;
+float visionAngle = (float) Math.PI/3;
 int width = 800;
 int height = 800;
 int widthMap = 10;
 color wallColorCollision;
+color skyColor = color(0,100,200);
+color groundColor = color(50,50,50);
 ArrayList<Wall> walls = new ArrayList<Wall>();
 public StringList rays = new StringList();
 
@@ -27,7 +29,7 @@ int[] map =
     1, 0, 0, 0, 0, 3, 0, 0, 0, 1, 
     1, 0, 0, 0, 0, 2, 0, 0, 0, 1, 
     1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 
-    1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 
+    1, 4, 0, 0, 0, 1, 0, 0, 0, 4, 
     1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
 
 

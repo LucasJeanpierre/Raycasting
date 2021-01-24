@@ -5,7 +5,6 @@ public class Player {
     float xspeed;
     float yspeed;
     float angleSpeed;
-    int NUMBER_OF_RAYS = 100;
 
     public Player(float x, float y, float angle) {
         this.x = x;
