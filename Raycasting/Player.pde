@@ -5,7 +5,7 @@ public class Player {
     float xspeed;
     float yspeed;
     float angleSpeed;
-    int NUMBER_OF_RAYS = 200;
+    int NUMBER_OF_RAYS = 100;
 
     public Player(float x, float y, float angle) {
         this.x = x;
@@ -28,23 +28,29 @@ public class Player {
 
     /**
      * see method draw the rays from the player
-    */
+     */
     public void see() {
         rays.clear();
         //start from the first half of the visionAngle
         float see_angle = this.angle-visionAngle/2;
         float length;
-        stroke(0,255,0);
+        String temp;
+        stroke(0, 255, 0);
 
-        for (int i = 0; i < this.NUMBER_OF_RAYS; i++) {
+        for (int i = 0; i < NUMBER_OF_RAYS; i++) {
 
             //get the length of the ray
-            length = lengthCollision(see_angle,walls);
-            line(this.x,this.y,this.x+length*cos(see_angle),this.y+length*sin(see_angle));
-            rays.append((int) length);
+
+            //length = lengthCollision(see_angle,walls);
+            //wallColorCollision = colorCollision(see_angle, walls);
+            temp = lengthAndColorCollision(see_angle, walls);
+            length = float(split(temp, ";")[0]);
+            wallColorCollision = color(int(split(split(temp, ";")[1], ",")[0]), int(split(split(temp, ";")[1], ",")[1]), int(split(split(temp, ";")[1], ",")[2]));
+            line(this.x, this.y, this.x+length*cos(see_angle), this.y+length*sin(see_angle));
+            rays.append(str(length) + ";" + red(wallColorCollision) + "," + green(wallColorCollision) + "," + blue(wallColorCollision));
 
             //set angle of the next ray
-            see_angle += (visionAngle)/this.NUMBER_OF_RAYS;
+            see_angle += (visionAngle)/NUMBER_OF_RAYS;
         }
         noStroke();
     }
